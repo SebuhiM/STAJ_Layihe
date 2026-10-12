@@ -1,20 +1,16 @@
-import './index.css'
+import "./index.css";
 import ReactDOM from "react-dom/client";
 import { createBrowserRouter } from "react-router";
 import { RouterProvider } from "react-router/dom";
-import Layout from './components/Layout';
-import About from './pages/About';
-import Home from './pages/Home';
-import Contact from './pages/Contact';
-import Blog from './pages/Blog';
-import Favorite from './pages/Favorite';
-import Basket from './pages/Basket';
-import Profile from './pages/Profile';
-import Shopnow from './pages/Shopnow';
-import FeaturedProducts from './pages/FeaturedProducts';
-import NewArrival from './pages/NewArrival';
-import Bestseller from './pages/Bestseller';
 
+import Layout from "./components/Layout";
+import Home from "./pages/Home";
+import Contact from "./pages/Contact";
+import Blog from "./pages/Blog";
+import Favorite from "./pages/Favorite";
+import Basket from "./pages/Basket";
+import Profile from "./pages/Profile";
+import Shopnow from "./pages/Shopnow";
 
 const router = createBrowserRouter([
   {
@@ -22,10 +18,6 @@ const router = createBrowserRouter([
     Component: Layout,
     children: [
       { index: true, Component: Home },
-      {
-        path: "/about",
-        Component: About,
-      },
       {
         path: "/contact",
         Component: Contact,
@@ -50,13 +42,9 @@ const router = createBrowserRouter([
         path: "/shopnow",
         Component: Shopnow,
       },
-      
-    ]
+    ],
   },
 ]);
 
 const root = document.getElementById("root")!;
-
-ReactDOM.createRoot(root).render(
-  <RouterProvider router={router} />,
-);
+ReactDOM.createRoot(root).render(<RouterProvider router={router} />);

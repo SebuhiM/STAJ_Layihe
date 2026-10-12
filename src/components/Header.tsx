@@ -32,12 +32,11 @@ const Header = () => {
               <img src={logoImg} alt="photo" />
             </NavLink>
           </div>
-      
 
           <div className="burger_menu">
             <img src={menuLogoImg} alt="Image" />
           </div>
-         </div>
+        </div>
 
         <div className="search_button">
           <Search
@@ -57,9 +56,8 @@ const Header = () => {
             </NavLink>
           </li>
           <li>
-            <NavLink to="/about" className="nav-link">
-              {" "}
-              About{" "}
+            <NavLink to="/shopnow" className="nav-link">
+              Shop Now
             </NavLink>
           </li>
           <li>
