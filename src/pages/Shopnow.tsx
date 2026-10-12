@@ -1,8 +1,8 @@
-
+import ShopNowComponents from '../components/ShopNowComponents'
 
 const Shopnow = () => {
   return (
-    <div>Shopnow</div>
+    <ShopNowComponents />
   )
 }
 

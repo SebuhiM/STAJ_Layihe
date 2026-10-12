@@ -887,21 +887,6 @@ button:active {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 .footer,
 .footer * {
   font-family: sans-serif;
@@ -1006,6 +991,10 @@ button:active {
 .footer-links a:hover {
   color: #ffffff;
 }
+
+/*     Footer CSS    */
+/*///////////////////////////////////////////////*/
+
 
 @media (max-width: 768px) {
   .responsive_div {
