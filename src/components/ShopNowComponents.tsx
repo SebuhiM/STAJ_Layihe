@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "../shopNow.css";
 import ipGold from "../assets/Iphone 14 pro 1 GOLD (1).png";
 import ipSilver from "../assets/Iphone 14 pro 1 WHITE (2).png";
@@ -6,17 +6,18 @@ import ipPurple from "../assets/Iphone 14 pro 1.png";
 import ip13 from "../assets/Iphone 13 pro 1 (1).png";
 import ipBlack from "../assets/Iphone 14 pro BLACK 1 (1).png";
 import ip11 from "../assets/Iphone 14 pro 1 (1).png";
-
-interface FilterItem {
-  name: string;
-  count: number;
-}
+import { useCart } from "../constants/CartContext"; 
 
 interface Product {
   id: number;
   title: string;
   price: number;
   image: string;
+}
+
+interface FilterItem {
+  name: string;
+  count: number;
 }
 
 const iphoneModels: FilterItem[] = [
@@ -55,7 +56,7 @@ const builtInMemories: FilterItem[] = [
   { name: "1TB", count: 15 },
 ];
 
-const products: Product[] = [
+const initialProducts: Product[] = [
   {
     id: 1,
     title: "Apple iPhone 14 Pro 512GB Gold (MQ233)",
@@ -113,6 +114,12 @@ const products: Product[] = [
 ];
 
 const ShopNowComponents: React.FC = () => {
+  const { addToCart } = useCart();
+
+  const [products, setProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
+
   const [isOpen, setIsOpen] = useState({
     model: true,
     battery: false,
@@ -124,6 +131,22 @@ const ShopNowComponents: React.FC = () => {
 
   const [selectedModels, setSelectedModels] = useState<string[]>([]);
   const [selectedMemories, setSelectedMemories] = useState<string[]>([]);
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        setLoading(true);
+        await new Promise((resolve) => setTimeout(resolve, 700));
+        setProducts(initialProducts);
+        setLoading(false);
+      } catch (err) {
+        setError("Məlumatlar yüklənərkən xəta baş verdi!");
+        setLoading(false);
+      }
+    };
+
+    fetchProducts();
+  }, []);
 
   const toggleSection = (section: keyof typeof isOpen) => {
     setIsOpen((prev) => ({ ...prev, [section]: !prev[section] }));
@@ -156,6 +179,14 @@ const ShopNowComponents: React.FC = () => {
 
     return matchesModel && matchesMemory;
   });
+
+  if (loading) {
+    return <div style={{ textAlign: "center", padding: "60px", fontSize: "18px" , fontFamily: "sans-serif" }}> Loading... ⏳</div>;
+  }
+
+  if (error) {
+    return <div style={{ textAlign: "center", padding: "60px", color: "red", fontSize: "18px" }}>{error}</div>;
+  }
 
   return (
     <div className="container_8">
@@ -324,7 +355,12 @@ const ShopNowComponents: React.FC = () => {
                 />
                 <h4 className="product-title">{product.title}</h4>
                 <p className="product-price">${product.price}</p>
-                <button className="buy-btn">Buy Now</button>
+                <button 
+                  className="buy-btn"
+                  onClick={() => addToCart({ ...product, quantity: 1 })}
+                >
+                  Buy Now
+                </button>
               </div>
             ))}
           </div>

@@ -8,7 +8,7 @@ import qulaqliqImg from "../assets/qulaqliq.png";
 import zfoldImg from "../assets/zfold.png";
 import cameraImg from "../assets/camera(1).png";
 import appleWatchImg from "../assets/watchapple.png";
-
+import { useCart } from "../constants/CartContext";
 
 const products = [
   {
@@ -70,10 +70,11 @@ const products = [
 ];
 
 const MainBox_4 = () => {
+  const { addToCart } = useCart();
   const [activeTab, setActiveTab] = useState("newArrival");
 
   const filterProducts = products.filter((item) =>
-    item.categories?.includes(activeTab)
+    item.categories?.includes(activeTab),
   );
 
   return (
@@ -111,7 +112,20 @@ const MainBox_4 = () => {
               </div>
               <h3>{item.name}</h3>
               <p className="price">${item.price}</p>
-              <button className="buy_btn">Buy Now</button>
+              <button
+                className="buy-btn"
+                onClick={() =>
+                  addToCart({
+                    id: item.id,
+                    title: item.name,
+                    price: item.price,
+                    image: item.img,
+                    quantity: 1,
+                  })
+                }
+              >
+                Buy Now
+              </button>
             </div>
           ))}
         </div>

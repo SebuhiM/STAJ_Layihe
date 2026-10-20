@@ -2,7 +2,10 @@ import iPhoneGOLDImg from "../assets/Iphone 14 pro 1 GOLD (1).png";
 import iPhoneWHITEImg from "../assets/Iphone 14 pro 1 WHITE (2).png";
 import headPhoneImg from "../assets/qulaqliq.png";
 import appleWachImg from "../assets/watchapple.png";
-import likeBtn from "../assets/Favorite_duotone.png"
+import likeBtn from "../assets/Favorite_duotone.png";
+import { useCart } from "../constants/CartContext"; 
+
+
 
 const items = [
   {
@@ -32,6 +35,8 @@ const items = [
 ];
 
 const MainBox_6 = () => {
+  const { addToCart } = useCart();
+
   return (
     <div className="container_6">
       <div className="sub_container_5">
@@ -48,7 +53,19 @@ const MainBox_6 = () => {
               </div>
               <h3>{item.name}</h3>
               <p className="price">${item.price}</p>
-              <button className="buy_btn">Buy Now</button>
+              <button 
+              className="buy_btn"
+              onClick={() =>
+                  addToCart({
+                    id: item.id,
+                    title: item.name,
+                    price: item.price,
+                    image: item.img,
+                    quantity: 1,
+                  })
+                }>
+                Buy Now
+              </button>
             </div>
           ))}
         </div>
