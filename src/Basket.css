@@ -93,7 +93,7 @@
 }
 
 /* ========================================== */
-/* MOBILE RESPONSIVE (max-width: 768px)       */
+/* MOBILE RESPONSIVE */
 /* ========================================== */
 @media (max-width: 768px) {
   .cart-container {
@@ -113,7 +113,7 @@
   }
 
   .cart-item-details {
-    padding-right: 25px; /* Silmə düyməsi üçün yer */
+    padding-right: 25px; 
   }
 
   .remove-btn {
