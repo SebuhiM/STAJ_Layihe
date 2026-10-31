@@ -86,14 +86,14 @@
   color: #fff;
   padding: 12px 30px;
   border: none;
-  borderRadius: 5px;
+  border-radius: 5px;
   font-size: 16px;
   cursor: pointer;
   margin-top: 10px;
 }
 
 /* ========================================== */
-/* MOBILE RESPONSIVE (max-width: 768px)       */
+/* MOBILE RESPONSIVE */
 /* ========================================== */
 @media (max-width: 768px) {
   .cart-container {
@@ -113,7 +113,7 @@
   }
 
   .cart-item-details {
-    padding-right: 25px; /* Silmə düyməsi üçün yer */
+    padding-right: 25px; 
   }
 
   .remove-btn {
@@ -133,6 +133,6 @@
   }
 
   .checkout-btn {
-    width: 100%; /* Mobil ekranda düymə tam en alacaq */
+    width: 100%; 
   }
 }
