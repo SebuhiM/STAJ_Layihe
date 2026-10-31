@@ -13,7 +13,7 @@ const Home = () => {
   useEffect(() => {
     const timer = setTimeout(() => {
       setLoading(false);
-    }, 700);
+    }, 500);
 
     return () => clearTimeout(timer);
   }, []);
@@ -21,7 +21,7 @@ const Home = () => {
   if (loading) {
     return (
       <div style={{ textAlign: "center", padding: "60px", fontSize: "18px", fontFamily: "sans-serif" }}>
-       Loading... ⏳
+       Loading... 
       </div>
     );
   }

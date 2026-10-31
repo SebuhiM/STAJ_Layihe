@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router";
 import "../shopNow.css";
 import ipGold from "../assets/Iphone 14 pro 1 GOLD (1).png";
 import ipSilver from "../assets/Iphone 14 pro 1 WHITE (2).png";
@@ -7,6 +8,9 @@ import ip13 from "../assets/Iphone 13 pro 1 (1).png";
 import ipBlack from "../assets/Iphone 14 pro BLACK 1 (1).png";
 import ip11 from "../assets/Iphone 14 pro 1 (1).png";
 import { useCart } from "../constants/CartContext"; 
+import { useWishlist } from "../constants/WishlistContent"; 
+import heartFilled from "../assets/Like copy.png";
+import heartEmpty from "../assets/LikeEmpty.png";
 
 interface Product {
   id: number;
@@ -57,71 +61,30 @@ const builtInMemories: FilterItem[] = [
 ];
 
 const initialProducts: Product[] = [
-  {
-    id: 1,
-    title: "Apple iPhone 14 Pro 512GB Gold (MQ233)",
-    price: 1437,
-    image: ipGold,
-  },
-  {
-    id: 2,
-    title: "Apple iPhone 11 128GB White (MQ233)",
-    price: 510,
-    image: ip11,
-  },
-  {
-    id: 3,
-    title: "Apple iPhone 11 128GB White (MQ233)",
-    price: 550,
-    image: ip11,
-  },
-  {
-    id: 4,
-    title: "Apple iPhone 14 Pro 1TB Gold (MQ2V3)",
-    price: 1499,
-    image: ipGold,
-  },
-  {
-    id: 5,
-    title: "Apple iPhone 14 Pro 1TB Gold (MQ2V3)",
-    price: 1399,
-    image: ipGold,
-  },
-  {
-    id: 6,
-    title: "Apple iPhone 14 Pro 128GB Deep Purple (MQ0G3)",
-    price: 1600,
-    image: ipPurple,
-  },
-  {
-    id: 7,
-    title: "Apple iPhone 13 mini 128GB Pink (MLK23)",
-    price: 850,
-    image: ip13,
-  },
-  {
-    id: 8,
-    title: "Apple iPhone 14 Pro 256GB Space Black (MQ0T3)",
-    price: 1399,
-    image: ipBlack,
-  },
-  {
-    id: 9,
-    title: "Apple iPhone 14 Pro 256GB Silver (MQ103)",
-    price: 1399,
-    image: ipSilver,
-  },
+  { id: 1, title: "Apple iPhone 14 Pro 512GB Gold (MQ233)", price: 1437, image: ipGold },
+  { id: 2, title: "Apple iPhone 11 128GB White (MQ233)", price: 510, image: ip11 },
+  { id: 3, title: "Apple iPhone 11 128GB White (MQ233)", price: 550, image: ip11 },
+  { id: 4, title: "Apple iPhone 14 Pro 1TB Gold (MQ2V3)", price: 1499, image: ipGold },
+  { id: 5, title: "Apple iPhone 14 Pro 1TB Gold (MQ2V3)", price: 1399, image: ipGold },
+  { id: 6, title: "Apple iPhone 14 Pro 128GB Deep Purple (MQ0G3)", price: 1600, image: ipPurple },
+  { id: 7, title: "Apple iPhone 13 mini 128GB Pink (MLK23)", price: 850, image: ip13 },
+  { id: 8, title: "Apple iPhone 14 Pro 256GB Space Black (MQ0T3)", price: 1399, image: ipBlack },
+  { id: 9, title: "Apple iPhone 14 Pro 256GB Silver (MQ103)", price: 1399, image: ipSilver },
 ];
 
 const ShopNowComponents: React.FC = () => {
+  const navigate = useNavigate();
   const { addToCart } = useCart();
+  const { addToWishlist, isInWishlist } = useWishlist(); 
 
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
+  const [isMobileFilterOpen, setIsMobileFilterOpen] = useState<boolean>(false);
+
   const [isOpen, setIsOpen] = useState({
-    model: true,
+    model: false,
     battery: false,
     screenType: false,
     screenDiagonal: false,
@@ -136,15 +99,14 @@ const ShopNowComponents: React.FC = () => {
     const fetchProducts = async () => {
       try {
         setLoading(true);
-        await new Promise((resolve) => setTimeout(resolve, 700));
+        await new Promise((resolve) => setTimeout(resolve, 500));
         setProducts(initialProducts);
         setLoading(false);
       } catch (err) {
-        setError("Məlumatlar yüklənərkən xəta baş verdi!");
+        setError("An error occurred while loading data!");
         setLoading(false);
       }
     };
-
     fetchProducts();
   }, []);
 
@@ -154,34 +116,24 @@ const ShopNowComponents: React.FC = () => {
 
   const handleModelChange = (modelName: string) => {
     setSelectedModels((prev) =>
-      prev.includes(modelName)
-        ? prev.filter((item) => item !== modelName)
-        : [...prev, modelName],
+      prev.includes(modelName) ? prev.filter((item) => item !== modelName) : [...prev, modelName]
     );
   };
 
   const handleMemoryChange = (memoryName: string) => {
     setSelectedMemories((prev) =>
-      prev.includes(memoryName)
-        ? prev.filter((item) => item !== memoryName)
-        : [...prev, memoryName],
+      prev.includes(memoryName) ? prev.filter((item) => item !== memoryName) : [...prev, memoryName]
     );
   };
 
   const filteredProducts = products.filter((product) => {
-    const matchesModel =
-      selectedModels.length === 0 ||
-      selectedModels.some((model) => product.title.includes(model));
-
-    const matchesMemory =
-      selectedMemories.length === 0 ||
-      selectedMemories.some((memory) => product.title.includes(memory));
-
+    const matchesModel = selectedModels.length === 0 || selectedModels.some((model) => product.title.includes(model));
+    const matchesMemory = selectedMemories.length === 0 || selectedMemories.some((memory) => product.title.includes(memory));
     return matchesModel && matchesMemory;
   });
 
   if (loading) {
-    return <div style={{ textAlign: "center", padding: "60px", fontSize: "18px" , fontFamily: "sans-serif" }}> Loading... ⏳</div>;
+    return <div style={{ textAlign: "center", padding: "60px", fontSize: "18px", fontFamily: "sans-serif" }}>Loading... </div>;
   }
 
   if (error) {
@@ -191,22 +143,23 @@ const ShopNowComponents: React.FC = () => {
   return (
     <div className="container_8">
       <div className="sub_container_7">
-        <aside className="sidebar">
+        
+        <div className="mobile-filter-toggle">
+          <button onClick={() => setIsMobileFilterOpen((prev) => !prev)}>
+            <span>Filters</span>
+            <span>{isMobileFilterOpen ? "▲" : "▼"}</span>
+          </button>
+        </div>
+
+        <aside className={`sidebar ${isMobileFilterOpen ? "mobile-open" : ""}`}>
           <div className="filter-section">
-            <h3
-              onClick={() => toggleSection("model")}
-              style={{ cursor: "pointer" }}
-            >
-              iPhone Model <span>{isOpen.model ? "▲" : "▼"} </span>
+            <h3 onClick={() => toggleSection("model")}>
+              iPhone Model <span>{isOpen.model ? "▲" : "▼"}</span>
             </h3>
             {isOpen.model && (
               <>
                 <div className="search-box-wrapper">
-                  <input
-                    type="text"
-                    placeholder="Search"
-                    className="search-input"
-                  />
+                  <input type="text" placeholder="Search" className="search-input" />
                 </div>
                 <div className="filter-group">
                   {iphoneModels.map((item, index) => (
@@ -226,10 +179,7 @@ const ShopNowComponents: React.FC = () => {
           </div>
 
           <div className="filter-section">
-            <h3
-              onClick={() => toggleSection("battery")}
-              style={{ cursor: "pointer" }}
-            >
+            <h3 onClick={() => toggleSection("battery")}>
               Battery capacity <span>{isOpen.battery ? "▲" : "▼"}</span>
             </h3>
             {isOpen.battery && (
@@ -246,10 +196,7 @@ const ShopNowComponents: React.FC = () => {
           </div>
 
           <div className="filter-section">
-            <h3
-              onClick={() => toggleSection("screenType")}
-              style={{ cursor: "pointer" }}
-            >
+            <h3 onClick={() => toggleSection("screenType")}>
               Screen type <span>{isOpen.screenType ? "▲" : "▼"}</span>
             </h3>
             {isOpen.screenType && (
@@ -266,10 +213,7 @@ const ShopNowComponents: React.FC = () => {
           </div>
 
           <div className="filter-section">
-            <h3
-              onClick={() => toggleSection("screenDiagonal")}
-              style={{ cursor: "pointer" }}
-            >
+            <h3 onClick={() => toggleSection("screenDiagonal")}>
               Screen diagonal <span>{isOpen.screenDiagonal ? "▲" : "▼"}</span>
             </h3>
             {isOpen.screenDiagonal && (
@@ -286,10 +230,7 @@ const ShopNowComponents: React.FC = () => {
           </div>
 
           <div className="filter-section">
-            <h3
-              onClick={() => toggleSection("protection")}
-              style={{ cursor: "pointer" }}
-            >
+            <h3 onClick={() => toggleSection("protection")}>
               Protection class <span>{isOpen.protection ? "▲" : "▼"}</span>
             </h3>
             {isOpen.protection && (
@@ -306,10 +247,7 @@ const ShopNowComponents: React.FC = () => {
           </div>
 
           <div className="filter-section">
-            <h3
-              onClick={() => toggleSection("memory")}
-              style={{ cursor: "pointer" }}
-            >
+            <h3 onClick={() => toggleSection("memory")}>
               Built-in memory <span>{isOpen.memory ? "▲" : "▼"}</span>
             </h3>
             {isOpen.memory && (
@@ -333,10 +271,7 @@ const ShopNowComponents: React.FC = () => {
         <main className="main-content">
           <div className="top-bar">
             <span>
-              Selected Products:{" "}
-              <strong style={{ fontFamily: "sans-serif" }}>
-                {filteredProducts.length}
-              </strong>
+              Selected Products: <strong>{filteredProducts.length}</strong>
             </span>
             <select className="sort-select">
               <option>By rating</option>
@@ -345,34 +280,44 @@ const ShopNowComponents: React.FC = () => {
           </div>
 
           <div className="product-grid">
-            {filteredProducts.map((product) => (
-              <div key={product.id} className="product-card">
-                <button className="wishlist-btn">♡</button>
-                <img
-                  src={product.image}
-                  alt={product.title}
-                  className="product-img"
-                />
-                <h4 className="product-title">{product.title}</h4>
-                <p className="product-price">${product.price}</p>
-                <button 
-                  className="buy-btn"
-                  onClick={() => addToCart({ ...product, quantity: 1 })}
+            {filteredProducts.map((product) => {
+              const isFav = isInWishlist(product.id);
+              return (
+                <div 
+                  key={product.id} 
+                  className="product-card"
+                  onClick={() => navigate(`/details/${product.id}`)}
+                  style={{ cursor: "pointer" }}
                 >
-                  Buy Now
-                </button>
-              </div>
-            ))}
-          </div>
-
-          <div className="pagination">
-            <button>&lt;</button>
-            <button className="active">1</button>
-            <button>2</button>
-            <button>3</button>
-            <span>...</span>
-            <button>12</button>
-            <button>&gt;</button>
+                  <button 
+                    className="wishlist-btn"
+                    style={{ background: isFav ? "#ffe6e6" : "#fff" }}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      addToWishlist(product);
+                    }}
+                  >
+                    <img 
+                      src={isFav ? heartFilled : heartEmpty} 
+                      alt="wishlist"
+                      style={{ width: "20px", height: "20px", objectFit: "contain" }} 
+                    />
+                  </button>
+                  <img src={product.image} alt={product.title} className="product-img" />
+                  <h4 className="product-title">{product.title}</h4>
+                  <p className="product-price">${product.price}</p>
+                  <button 
+                    className="buy-btn"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      addToCart({ ...product, quantity: 1 });
+                    }}
+                  >
+                    Add to Cart
+                  </button>
+                </div>
+              );
+            })}
           </div>
         </main>
       </div>

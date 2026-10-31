@@ -1,4 +1,5 @@
-import { Flex, Input } from "antd";
+import React, { useState } from "react";
+import { Input, Badge } from "antd";
 import logoImg from "../assets/Logo Vector.png";
 import { Link, NavLink } from "react-router";
 import menuLogoImg from "../assets/Burger.png";
@@ -7,86 +8,101 @@ import {
   ShoppingCartOutlined,
   UserOutlined,
 } from "@ant-design/icons";
+import { useCart } from "../constants/CartContext";
+import { useWishlist } from "../constants/WishlistContent";
+import "../css/header.css";
 
 const { Search } = Input;
 
-const stylesFnSearch = () => ({
-  root: { color: "#4DA8DA", borderWidth: 0 },
-  input: { color: "#4DA8DA", borderColor: "#4DA8DA" },
-});
+const Header: React.FC = () => {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { cart } = useCart();
+  const { wishlist } = useWishlist();
 
-const classNames = {};
+  const toggleMenu = () => {
+    setIsMenuOpen((prev) => !prev);
+  };
 
-const Header = () => {
+  const closeMenu = () => {
+    setIsMenuOpen(false);
+  };
+
   return (
-    <div style={{ width: "100%", height: "88px" }}>
-      <Flex
-        gap="70px"
-        align="center"
-        justify="center"
-        style={{ height: "100%" }}
-      >
-        <div className="responsive_div">
-          <div className="logo_img1">
-            <NavLink to="/">
-              <img src={logoImg} alt="photo" />
-            </NavLink>
-          </div>
-
-          <div className="burger_menu">
-            <img src={menuLogoImg} alt="Image" />
-          </div>
+    <header className="site-header">
+      <div className="header-inner">
+        <div className="logo_img1">
+          <NavLink to="/" onClick={closeMenu}>
+            <img src={logoImg} alt="logo" style={{ width: "100%", display: "block" }} />
+          </NavLink>
         </div>
 
         <div className="search_button">
-          <Search
-            classNames={classNames}
-            styles={stylesFnSearch}
-            size="large"
-            placeholder="Search"
-            name="search-fn"
-          />
+          <Search size="large" placeholder="Search" name="search-fn" />
         </div>
 
-        <div className="pages">
+        {/* Əsas Naviqasiya Menyu (Masaüstü və Mobil ümumi) */}
+        <ul className={`pages ${isMenuOpen ? "active" : ""}`}>
           <li>
-            <NavLink to="/" className="nav-link">
-              {" "}
-              Home{" "}
+            <NavLink to="/" className="nav-link" onClick={closeMenu}>
+              Home
             </NavLink>
           </li>
           <li>
-            <NavLink to="/shopnow" className="nav-link">
+            <NavLink to="/shopnow" className="nav-link" onClick={closeMenu}>
               Shop Now
             </NavLink>
           </li>
           <li>
-            <NavLink to="/contact" className="nav-link">
-              {" "}
-              Contact Us{" "}
+            <NavLink to="/contact" className="nav-link" onClick={closeMenu}>
+              Contact Us
             </NavLink>
           </li>
           <li>
-            <NavLink to="/blog" className="nav-link">
-              {" "}
-              Blog{" "}
+            <NavLink to="/blog" className="nav-link" onClick={closeMenu}>
+              Blog
             </NavLink>
           </li>
-        </div>
 
-        <div className="icons_1">
-          <Link to="/favorite" className="nav-link1">
-            <HeartOutlined />
-          </Link>
-          <Link to="/basket" className="nav-link1">
-            <ShoppingCartOutlined />
-          </Link>
-          <Link to="/profile" className="nav-link1">
-            <UserOutlined />
-          </Link>
+          <li className="mobile-only-link">
+            <NavLink to="/favorite" className="nav-link" onClick={closeMenu}>
+              Favorites ({wishlist.length})
+            </NavLink>
+          </li>
+          <li className="mobile-only-link">
+            <NavLink to="/basket" className="nav-link" onClick={closeMenu}>
+              Basket ({cart.length})
+            </NavLink>
+          </li>
+          <li className="mobile-only-link">
+            <NavLink to="/profile" className="nav-link" onClick={closeMenu}>
+              Profile
+            </NavLink>
+          </li>
+        </ul>
+
+        <div className="header-right-group">
+          <div className="icons_1">
+            <Link to="/favorite" className="nav-link1" onClick={closeMenu}>
+              <Badge count={wishlist.length} size="small" offset={[0, 2]}>
+                <HeartOutlined style={{ fontSize: "20px", color: "#000" }} />
+              </Badge>
+            </Link>
+            <Link to="/basket" className="nav-link1" onClick={closeMenu}>
+              <Badge count={cart.length} size="small" offset={[0, 2]}>
+                <ShoppingCartOutlined style={{ fontSize: "20px", color: "#000" }} />
+              </Badge>
+            </Link>
+            <Link to="/profile" className="nav-link1" onClick={closeMenu}>
+              <UserOutlined style={{ fontSize: "20px", color: "#000" }} />
+            </Link>
+          </div>
+
+          <div className="burger_menu" onClick={toggleMenu}>
+            <img src={menuLogoImg} alt="Burger Menu" style={{ width: "28px", height: "28px" }} />
+          </div>
         </div>
-      </Flex>
-    </div>
+      </div>
+    </header>
   );
 };
 

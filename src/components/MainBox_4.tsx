@@ -124,7 +124,7 @@ const MainBox_4 = () => {
                   })
                 }
               >
-                Buy Now
+                Add to Card
               </button>
             </div>
           ))}
